@@ -3,6 +3,7 @@ package jeff.wizardscorekeeper;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,23 +16,31 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import jeff.wizardscorekeeper.gameplay.Game;
 import jeff.wizardscorekeeper.gameplay.Player;
+import jeff.wizardscorekeeper.gameplay.Scoresheet;
 
 public class MainActivity extends AppCompatActivity {
 
     LinearLayout mainLayout;
     Game game;
+    String startTime;
+    Scoresheet scoresheet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // record start time
+        startTime = new Date().toString();
+
         // ensure game is not initialized
         game = null;
+        scoresheet = null;
 
         // create main background color blue
         this.mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
@@ -255,12 +264,13 @@ public class MainActivity extends AppCompatActivity {
                     players[i] = new Player(names[i]);
                 }
                 game = new Game(players);
+                scoresheet = new Scoresheet(game, names);
                 displayScore(names);
             }
         });
     }
 
-    public void displayScore(String[] names) {
+    public void displayScore(final String[] names) {
         // clear linear layout
         mainLayout.removeAllViews();
 
@@ -298,5 +308,145 @@ public class MainActivity extends AppCompatActivity {
             space.setMinimumHeight(20);
         }
 
+//        // button to give option of viewing full scoresheet
+//        Space botSpace = new Space(this);
+//        mainLayout.addView(botSpace);
+//        botSpace.setMinimumHeight(50);
+//        Button scoresheetButton = new Button(this);
+//        mainLayout.addView(scoresheetButton);
+//        scoresheetButton.setGravity(Gravity.CENTER);
+//        scoresheetButton.setText(R.string.view_scoresheet);
+//        scoresheetButton.setWidth(2);
+//        scoresheetButton.setMinimumWidth(2);
+//        scoresheetButton.setMaxWidth(2);
+//
+//        scoresheetButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                viewScoresheet();
+//            }
+//        });
+
+        // make okay button at bottom
+        Space botSpace2 = new Space(this);
+        mainLayout.addView(botSpace2);
+        botSpace2.setMinimumHeight(50);
+        Button okayButton = new Button(this);
+        mainLayout.addView(okayButton);
+        okayButton.setGravity(Gravity.CENTER);
+        okayButton.setText(R.string.ok);
+        okayButton.setWidth(2);
+        okayButton.setMinimumWidth(2);
+        okayButton.setMaxWidth(2);
+
+        okayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // initialize game
+                Player[] players = new Player[names.length];
+                for (int i=0; i<names.length; i++) {
+                    players[i] = new Player(names[i]);
+                }
+                game = new Game(players);
+                getBids();
+            }
+        });
     }
+
+//    public void viewScoresheet() {
+//        // clear linear layout
+//        mainLayout.removeAllViews();
+//
+//        // title
+//        TextView newGameTitle = new TextView(this);
+//        mainLayout.addView(newGameTitle);
+//        newGameTitle.setMinHeight(200);
+//        newGameTitle.setBackgroundColor(Color.rgb(255,0,0));
+//        newGameTitle.setTextColor(Color.rgb(255,255,0));
+//        newGameTitle.setText(startTime);
+//        newGameTitle.setGravity(Gravity.CENTER);
+//        newGameTitle.setTextSize(20);
+//
+//        // start displaying scores
+//        Space midSpace = new Space(this);
+//        mainLayout.addView(midSpace);
+//        midSpace.setMinimumHeight(50);
+//
+//        TextView score = new TextView(this);
+//        mainLayout.addView(score);
+//        score.setBackgroundColor(Color.WHITE);
+//        score.setElegantTextHeight(true);
+//        score.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+//        score.setSingleLine(false);
+//        score.setText(scoresheet.printScoresheet());
+//    }
+
+    public void getBids() {
+        // clear linear layout
+        mainLayout.removeAllViews();
+
+        // title
+        String title = "Bids for Hand #" + Integer.toString(game.getCurrentHand());
+        TextView newGameTitle = new TextView(this);
+        mainLayout.addView(newGameTitle);
+        newGameTitle.setMinHeight(200);
+        newGameTitle.setBackgroundColor(Color.rgb(255,0,0));
+        newGameTitle.setTextColor(Color.rgb(255,255,0));
+        newGameTitle.setText(title);
+        newGameTitle.setGravity(Gravity.CENTER);
+        newGameTitle.setTextSize(20);
+
+        // Display names of players and ask for their bids
+        Space midSpace = new Space(this);
+        mainLayout.addView(midSpace);
+        midSpace.setMinimumHeight(50);
+
+        TextView bidsTitle = new TextView(this);
+        mainLayout.addView(bidsTitle);
+        bidsTitle.setText(R.string.enter_bids);
+        bidsTitle.setTextSize(18);
+        bidsTitle.setTextColor(Color.WHITE);
+
+        final EditText[] bids = new EditText[game.getPlayers().length];
+        for (int i=0; i<bids.length; i++) {
+            TextView name = new TextView(this);
+            mainLayout.addView(name);
+            name.setText(game.getPlayers()[i].getName());
+            name.setTextColor(Color.WHITE);
+            name.setTextSize(10);
+
+            EditText bidAsked = new EditText(this);
+            mainLayout.addView(bidAsked);
+            bidAsked.setBackgroundColor(Color.WHITE);
+            bidAsked.setTextSize(12);
+
+            // record bids in array
+            bids[i] = bidAsked;
+        }
+
+        Space botSpace2 = new Space(this);
+        mainLayout.addView(botSpace2);
+        botSpace2.setMinimumHeight(50);
+        Button okayButton = new Button(this);
+        mainLayout.addView(okayButton);
+        okayButton.setGravity(Gravity.CENTER);
+        okayButton.setText(R.string.ok);
+        okayButton.setWidth(2);
+        okayButton.setMinimumWidth(2);
+        okayButton.setMaxWidth(2);
+
+        okayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // make integer array of bids
+                int[] bidsInt = new int[bids.length];
+                for (int i=0; i<bids.length; i++) {
+                    bidsInt[i] = Integer.parseInt(bids[i].getText().toString());
+                }
+                applyBids(bidsInt);
+            }
+        });
+    }
+
+    public void applyBids(int[] bids) {}
 }

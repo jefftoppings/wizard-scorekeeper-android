@@ -3,13 +3,17 @@ package jeff.wizardscorekeeper.gameplay;
 import java.util.ArrayList;
 
 public class Scoresheet {
-    ArrayList<String[]> sheet;
-    Game game;
+    private ArrayList<String[]> sheet;
+    private Game game;
 
     public Scoresheet(Game game, String[] names) {
         this.sheet = new ArrayList<>();
         sheet.add(names);
         this.game = game;
+    }
+
+    public int numLines() {
+        return sheet.size();
     }
 
     public void updateScoresheet() {
