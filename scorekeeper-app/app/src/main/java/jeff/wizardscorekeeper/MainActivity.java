@@ -17,14 +17,21 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import jeff.wizardscorekeeper.gameplay.Game;
+import jeff.wizardscorekeeper.gameplay.Player;
+
 public class MainActivity extends AppCompatActivity {
 
     LinearLayout mainLayout;
+    Game game;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // ensure game is not initialized
+        game = null;
 
         // create main background color blue
         this.mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
@@ -176,7 +183,84 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void initializeGame(String[] names) {
+    public void initializeGame(final String[] names) {
+        // clear linear layout
+        mainLayout.removeAllViews();
+
+        // title
+        TextView newGameTitle = new TextView(this);
+        mainLayout.addView(newGameTitle);
+        newGameTitle.setMinHeight(200);
+        newGameTitle.setBackgroundColor(Color.rgb(255,0,0));
+        newGameTitle.setTextColor(Color.rgb(255,255,0));
+        newGameTitle.setText(R.string.confirm_names);
+        newGameTitle.setGravity(Gravity.CENTER);
+        newGameTitle.setTextSize(20);
+
+        // Display names of players
+        Space midSpace = new Space(this);
+        mainLayout.addView(midSpace);
+        midSpace.setMinimumHeight(50);
+
+        TextView prompt = new TextView(this);
+        mainLayout.addView(prompt);
+        prompt.setText(R.string.confirm_names_prompt);
+        prompt.setTextColor(Color.WHITE);
+
+        for (int i=0; i<names.length; i++) {
+            TextView name = new TextView(this);
+            mainLayout.addView(name);
+            name.setText(names[i]);
+            name.setTextColor(Color.WHITE);
+        }
+
+        // button to give option of going back
+        Space botSpace = new Space(this);
+        mainLayout.addView(botSpace);
+        botSpace.setMinimumHeight(50);
+        Button backButton = new Button(this);
+        mainLayout.addView(backButton);
+        backButton.setGravity(Gravity.CENTER);
+        backButton.setText(R.string.back);
+        backButton.setWidth(2);
+        backButton.setMinimumWidth(2);
+        backButton.setMaxWidth(2);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                get_names(names.length);
+            }
+        });
+
+
+        // make okay button at bottom
+        Space botSpace2 = new Space(this);
+        mainLayout.addView(botSpace2);
+        botSpace2.setMinimumHeight(50);
+        Button okayButton = new Button(this);
+        mainLayout.addView(okayButton);
+        okayButton.setGravity(Gravity.CENTER);
+        okayButton.setText(R.string.ok);
+        okayButton.setWidth(2);
+        okayButton.setMinimumWidth(2);
+        okayButton.setMaxWidth(2);
+
+        okayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // initialize game
+                Player[] players = new Player[names.length];
+                for (int i=0; i<names.length; i++) {
+                    players[i] = new Player(names[i]);
+                }
+                game = new Game(players);
+                displayScore(names);
+            }
+        });
+    }
+
+    public void displayScore(String[] names) {
         
     }
 }

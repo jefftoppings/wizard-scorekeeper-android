@@ -4,9 +4,9 @@ public class Game {
     private Player[] players;
     private int numHands, currentHand;
 
-    public Game(int numPlayers) {
-        this.players = new Player[numPlayers];
-        this.numHands = 60 / numPlayers;
+    public Game(Player[] players) {
+        this.players = players;
+        this.numHands = 60 / players.length;
         this.currentHand = 1;
     }
 
