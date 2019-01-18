@@ -4,6 +4,7 @@
     <string name="new_game">New Game</string>
     <string name="exit">Exit</string>
     <string name="how_many_players">How many players?</string>
+    <string name="ok">OK</string>
     <string-array name="num_players_array">
         <item>2</item>
         <item>3</item>
