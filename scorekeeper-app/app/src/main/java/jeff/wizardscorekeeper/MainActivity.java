@@ -261,6 +261,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void displayScore(String[] names) {
-        
+        // clear linear layout
+        mainLayout.removeAllViews();
+
+        // title
+        TextView newGameTitle = new TextView(this);
+        mainLayout.addView(newGameTitle);
+        newGameTitle.setMinHeight(200);
+        newGameTitle.setBackgroundColor(Color.rgb(255,0,0));
+        newGameTitle.setTextColor(Color.rgb(255,255,0));
+        newGameTitle.setText(R.string.score_title);
+        newGameTitle.setGravity(Gravity.CENTER);
+        newGameTitle.setTextSize(20);
+
+        // Display names of players and their scores
+        Space midSpace = new Space(this);
+        mainLayout.addView(midSpace);
+        midSpace.setMinimumHeight(50);
+
+        for (int i=0; i<names.length; i++) {
+            TextView name = new TextView(this);
+            mainLayout.addView(name);
+            name.setText(names[i]);
+            name.setTextColor(Color.WHITE);
+            name.setGravity(Gravity.CENTER);
+
+            TextView score = new TextView(this);
+            mainLayout.addView(score);
+            String scoreStr = Integer.toString(game.getPlayers()[i].getScore());
+            score.setText(scoreStr);
+            score.setTextColor(Color.WHITE);
+            score.setGravity(Gravity.CENTER);
+
+            Space space = new Space(this);
+            mainLayout.addView(space);
+            space.setMinimumHeight(20);
+        }
+
     }
 }

@@ -11,6 +11,7 @@
     <string name="confirm_names">Confirm Names</string>
     <string name="confirm_names_prompt">The names you entered were:</string>
     <string name="back">Back</string>
+    <string name="score_title">Scorecard</string>
     <string-array name="num_players_array">
         <item>2</item>
         <item>3</item>
